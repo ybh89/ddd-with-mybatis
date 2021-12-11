@@ -1,6 +1,8 @@
 package com.demo.dddwithmybatis.v1.application;
 
+import com.demo.dddwithmybatis.v1.domain.model.Brand;
 import com.demo.dddwithmybatis.v1.domain.model.Maker;
+import com.demo.dddwithmybatis.v1.domain.model.Series;
 import com.demo.dddwithmybatis.v1.domain.repository.BrandRepository;
 import com.demo.dddwithmybatis.v1.domain.repository.MakerRepository;
 import com.demo.dddwithmybatis.v1.domain.repository.SeriesRepository;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -58,6 +61,22 @@ public class MakerService {
                 }));
 
         // 2. 추가
+        List<Brand> addBrands = originalMaker.addBrands(newMaker);
+        addBrands.forEach(addBrand -> brandRepository.save(originalMaker.getId(), addBrand));
+        originalMaker.getBrands().forEach(originalBrand -> {
+            newMaker.getBrands().stream()
+                    .forEach(newBrand -> {
+                        if (newBrand.getId().equals(originalBrand.getId()))
+                        {
+                            List<Series> addSeriesList = originalBrand.addSeries(newBrand);
+                            addSeriesList.forEach(addSeries -> seriesRepository.save(originalBrand.getId(), addSeries));
+                        }
+                    });
+        });
+
+        // 3. 삭제
+        List<Brand> brands = originalMaker.removeBrands(newMaker);
+
         return originalMaker.getId();
     }
 

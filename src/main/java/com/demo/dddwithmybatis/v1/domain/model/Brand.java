@@ -7,6 +7,8 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @ToString
 @Getter
@@ -42,5 +44,14 @@ public class Brand {
         {
             this.name = newBrand.getName();
         }
+    }
+
+    public List<Series> addSeries(Brand newBrand) {
+        List<Series> newSeries = newBrand.getSeriesList().stream()
+                .filter(series -> Objects.isNull(series.getId()))
+                .collect(Collectors.toList());
+
+        this.seriesList.addAll(newSeries);
+        return newSeries;
     }
 }

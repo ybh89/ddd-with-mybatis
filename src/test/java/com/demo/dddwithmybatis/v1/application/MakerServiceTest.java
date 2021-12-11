@@ -90,4 +90,40 @@ class MakerServiceTest {
                     .forEach(seriesResponse -> assertThat(seriesResponse.getName()).isEqualTo("수정시리즈"));
         });
     }
+
+    @DisplayName("제조사 추가 성공")
+    @Test
+    public void add() throws Exception {
+        // given
+        SeriesSaveRequest seriesSaveRequest = new SeriesSaveRequest("시리즈");
+        BrandSaveRequest brandSaveRequest = new BrandSaveRequest("브랜드", List.of(seriesSaveRequest));
+        MakerSaveRequest makerSaveRequest = new MakerSaveRequest("제조사", List.of(brandSaveRequest));
+        Long makerId = makerService.create(makerSaveRequest);
+        MakerResponse makerResponse = makerService.retrieve(makerId);
+
+        // when
+        List<BrandUpdateRequest> brandUpdateRequests = makerResponse.getBrandResponses().stream()
+                .map(brandResponse -> {
+                    List<SeriesUpdateRequest> seriesUpdateRequests = brandResponse.getSeriesResponses().stream()
+                            .map(seriesResponse -> new SeriesUpdateRequest(null, "추가시리즈"))
+                            .collect(Collectors.toList());
+                    return new BrandUpdateRequest(null, "추가브랜드", seriesUpdateRequests);
+                }).collect(Collectors.toList());
+        MakerUpdateRequest makerUpdateRequest = new MakerUpdateRequest(makerResponse.getId(), "수정제조사", brandUpdateRequests);
+        Long updateMakerId = makerService.update(makerUpdateRequest);
+
+        // then
+        MakerResponse updatedMakerResponse = makerService.retrieve(updateMakerId);
+        System.out.println("test updatedMakerResponse= " + updatedMakerResponse);
+        assertThat(updatedMakerResponse.getName()).isEqualTo("수정제조사");
+
+        assertThat(updatedMakerResponse.getBrandResponses().stream()
+                .map(brandResponse -> brandResponse.getName())
+                .collect(Collectors.toList())).containsExactly("브랜드", "추가브랜드");
+
+        assertThat(updatedMakerResponse.getBrandResponses().stream()
+                .flatMap(brandResponse -> brandResponse.getSeriesResponses().stream())
+                .map(seriesResponse -> seriesResponse.getName())
+                .collect(Collectors.toList())).containsExactly("시리즈", "추가시리즈");
+    }
 }

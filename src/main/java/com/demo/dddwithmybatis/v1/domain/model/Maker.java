@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @ToString
 @Getter
@@ -42,5 +44,19 @@ public class Maker {
         {
             this.name = newMaker.getName();
         }
+    }
+
+    public List<Brand> addBrands(Maker newMaker) {
+        List<Brand> newBrands = newMaker.getBrands().stream()
+                .filter(brand -> Objects.isNull(brand.getId()))
+                .collect(Collectors.toList());
+
+        this.brands.addAll(newBrands);
+        return newBrands;
+    }
+
+    public List<Brand> removeBrands(Maker newMaker) {
+
+        return null;
     }
 }
