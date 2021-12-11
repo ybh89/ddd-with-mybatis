@@ -1,11 +1,9 @@
-package com.demo.dddwithmybatis.v1.dto;
+package com.demo.dddwithmybatis.v1.dto.series;
 
 import com.demo.dddwithmybatis.v1.domain.model.Series;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter

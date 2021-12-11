@@ -1,9 +1,9 @@
 package com.demo.dddwithmybatis.v1.web;
 
 import com.demo.dddwithmybatis.v1.application.MakerService;
-import com.demo.dddwithmybatis.v1.domain.model.Maker;
-import com.demo.dddwithmybatis.v1.dto.MakerRequest;
-import com.demo.dddwithmybatis.v1.dto.MakerResponse;
+import com.demo.dddwithmybatis.v1.dto.maker.MakerSaveRequest;
+import com.demo.dddwithmybatis.v1.dto.maker.MakerResponse;
+import com.demo.dddwithmybatis.v1.dto.maker.MakerUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,16 +15,16 @@ public class MakerController {
     private final MakerService makerService;
 
     @PostMapping
-    public ResponseEntity<Long> create(MakerRequest makerRequest)
+    public ResponseEntity<Long> create(MakerSaveRequest makerSaveRequest)
     {
-        Long makerId = makerService.create(makerRequest);
+        Long makerId = makerService.create(makerSaveRequest);
         return ResponseEntity.ok(makerId);
     }
 
     @PutMapping
-    public ResponseEntity<Long> update(MakerRequest makerRequest)
+    public ResponseEntity<Long> update(MakerUpdateRequest makerUpdateRequest)
     {
-        Long makerId = makerService.update(makerRequest);
+        Long makerId = makerService.update(makerUpdateRequest);
         return ResponseEntity.ok(makerId);
     }
 

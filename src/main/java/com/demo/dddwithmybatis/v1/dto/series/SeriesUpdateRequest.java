@@ -1,4 +1,4 @@
-package com.demo.dddwithmybatis.v1.dto;
+package com.demo.dddwithmybatis.v1.dto.series;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class SeriesRequest {
+public class SeriesUpdateRequest {
+    private Long id;
     private String name;
 }

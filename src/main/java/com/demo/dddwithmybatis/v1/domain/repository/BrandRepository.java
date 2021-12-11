@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface BrandRepository {
-    int save(@Param("brand") Brand brand);
+    int save(@Param("makerId") Long makerId, @Param("brand") Brand brand);
     int update(@Param("brand") Brand brand);
 }

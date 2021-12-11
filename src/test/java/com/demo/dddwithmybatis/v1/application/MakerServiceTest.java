@@ -1,15 +1,19 @@
 package com.demo.dddwithmybatis.v1.application;
 
-import com.demo.dddwithmybatis.v1.dto.BrandRequest;
-import com.demo.dddwithmybatis.v1.dto.MakerRequest;
-import com.demo.dddwithmybatis.v1.dto.MakerResponse;
-import com.demo.dddwithmybatis.v1.dto.SeriesRequest;
+import com.demo.dddwithmybatis.v1.dto.brand.BrandSaveRequest;
+import com.demo.dddwithmybatis.v1.dto.brand.BrandUpdateRequest;
+import com.demo.dddwithmybatis.v1.dto.maker.MakerSaveRequest;
+import com.demo.dddwithmybatis.v1.dto.maker.MakerResponse;
+import com.demo.dddwithmybatis.v1.dto.maker.MakerUpdateRequest;
+import com.demo.dddwithmybatis.v1.dto.series.SeriesSaveRequest;
+import com.demo.dddwithmybatis.v1.dto.series.SeriesUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,36 +23,71 @@ class MakerServiceTest {
     @Autowired
     private MakerService makerService;
 
+    @DisplayName("제조사 생성 성공")
     @Test
     void create() {
         // given
-        SeriesRequest seriesRequest = new SeriesRequest("시리즈");
-        BrandRequest brandRequest = new BrandRequest("브랜드", List.of(seriesRequest));
-        MakerRequest makerRequest = new MakerRequest("제조사", List.of(brandRequest));
+        SeriesSaveRequest seriesRequest = new SeriesSaveRequest("시리즈");
+        BrandSaveRequest brandSaveRequest = new BrandSaveRequest("브랜드", List.of(seriesRequest));
+        MakerSaveRequest makerSaveRequest = new MakerSaveRequest("제조사", List.of(brandSaveRequest));
 
         // when
-        Long makerId = makerService.create(makerRequest);
+        Long makerId = makerService.create(makerSaveRequest);
 
         // then
         assertThat(makerId).isNotNull();
     }
 
+    @DisplayName("제조사 조회 성공")
     @Test
     void retrieve() {
         // given
-        SeriesRequest seriesRequest = new SeriesRequest("시리즈");
-        BrandRequest brandRequest = new BrandRequest("브랜드", List.of(seriesRequest));
-        MakerRequest makerRequest = new MakerRequest("제조사", List.of(brandRequest));
-        Long makerId = makerService.create(makerRequest);
+        SeriesSaveRequest seriesSaveRequest = new SeriesSaveRequest("시리즈");
+        BrandSaveRequest brandSaveRequest = new BrandSaveRequest("브랜드", List.of(seriesSaveRequest));
+        MakerSaveRequest makerSaveRequest = new MakerSaveRequest("제조사", List.of(brandSaveRequest));
+        Long makerId = makerService.create(makerSaveRequest);
 
         // when
         MakerResponse makerResponse = makerService.retrieve(makerId);
 
+        // then
         assertThat(makerResponse.getId()).isNotNull();
         makerResponse.getBrandResponses().forEach(brandResponse -> {
             assertThat(brandResponse.getId()).isNotNull();
             brandResponse.getSeriesResponses().forEach(seriesResponse ->
                     assertThat(seriesResponse.getId()).isNotNull());
+        });
+    }
+
+    @DisplayName("제조사 수정 성공")
+    @Test
+    public void update() throws Exception {
+        // given
+        SeriesSaveRequest seriesSaveRequest = new SeriesSaveRequest("시리즈");
+        BrandSaveRequest brandSaveRequest = new BrandSaveRequest("브랜드", List.of(seriesSaveRequest));
+        MakerSaveRequest makerSaveRequest = new MakerSaveRequest("제조사", List.of(brandSaveRequest));
+        Long makerId = makerService.create(makerSaveRequest);
+        MakerResponse makerResponse = makerService.retrieve(makerId);
+
+        // when
+        List<BrandUpdateRequest> brandUpdateRequests = makerResponse.getBrandResponses().stream()
+                .map(brandResponse -> {
+                    List<SeriesUpdateRequest> seriesUpdateRequests = brandResponse.getSeriesResponses().stream()
+                            .map(seriesResponse -> new SeriesUpdateRequest(seriesResponse.getId(), "수정시리즈"))
+                            .collect(Collectors.toList());
+                    return new BrandUpdateRequest(brandResponse.getId(), "수정브랜드", seriesUpdateRequests);
+                }).collect(Collectors.toList());
+        MakerUpdateRequest makerUpdateRequest = new MakerUpdateRequest(makerResponse.getId(), "수정제조사", brandUpdateRequests);
+        Long updateMakerId = makerService.update(makerUpdateRequest);
+
+        // then
+        MakerResponse updatedMakerResponse = makerService.retrieve(updateMakerId);
+        System.out.println("test updatedMakerResponse= " + updatedMakerResponse);
+        assertThat(updatedMakerResponse.getName()).isEqualTo("수정제조사");
+        updatedMakerResponse.getBrandResponses().forEach(brandResponse -> {
+            assertThat(brandResponse.getName()).isEqualTo("수정브랜드");
+            brandResponse.getSeriesResponses()
+                    .forEach(seriesResponse -> assertThat(seriesResponse.getName()).isEqualTo("수정시리즈"));
         });
     }
 }

@@ -1,5 +1,6 @@
-package com.demo.dddwithmybatis.v1.dto;
+package com.demo.dddwithmybatis.v1.dto.maker;
 
+import com.demo.dddwithmybatis.v1.dto.brand.BrandSaveRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class BrandRequest {
+public class MakerSaveRequest {
     private String name;
-    private List<SeriesRequest> seriesRequests = new ArrayList<>();
+    private List<BrandSaveRequest> brandSaveRequests = new ArrayList<>();
 }

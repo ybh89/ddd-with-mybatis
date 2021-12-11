@@ -2,6 +2,8 @@ spring:
   datasource:
     driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     url: jdbc:log4jdbc:h2:mem:testdb
+    username: sa
+    password:
     initialization-mode: always
 
 mybatis:
@@ -12,7 +14,7 @@ logging:
     jdbc:
       sqlonly: INFO
       sqltiming: OFF
-      resultsettable: OFF
+      resultsettable: INFO
       audit: OFF
       resultset: OFF
       connection: OFF

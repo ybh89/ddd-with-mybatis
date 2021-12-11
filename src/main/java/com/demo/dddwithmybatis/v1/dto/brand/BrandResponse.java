@@ -1,15 +1,16 @@
-package com.demo.dddwithmybatis.v1.dto;
+package com.demo.dddwithmybatis.v1.dto.brand;
 
 import com.demo.dddwithmybatis.v1.domain.model.Brand;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.demo.dddwithmybatis.v1.domain.model.Series;
+import com.demo.dddwithmybatis.v1.dto.series.SeriesResponse;
+import com.demo.dddwithmybatis.v1.dto.series.SeriesUpdateRequest;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
