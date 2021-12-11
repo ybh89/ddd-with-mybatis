@@ -55,14 +55,6 @@ public class Maker {
         return newBrands;
     }
 
-    public List<Brand> removeBrands(Maker newMaker) {
-        List<Brand> deleteBrands = this.brands.stream()
-                .filter(brand -> !newMaker.getBrands().contains(brand))
-                .collect(Collectors.toList());
-        this.brands.removeAll(deleteBrands);
-        return deleteBrands;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

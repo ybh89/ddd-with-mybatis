@@ -55,13 +55,13 @@ public class Brand {
         return newSeries;
     }
 
-    public List<Series> deleteSeries(Brand newBrand)
+    public List<Series> removeSeries(Brand newBrand)
     {
-        List<Series> deleteSeriesList = this.seriesList.stream()
+        List<Series> removeSeriesList = this.seriesList.stream()
                 .filter(series -> !newBrand.getSeriesList().contains(series))
                 .collect(Collectors.toList());
-        this.seriesList.removeAll(deleteSeriesList);
-        return deleteSeriesList;
+        this.seriesList.removeAll(removeSeriesList);
+        return removeSeriesList;
     }
 
     @Override
