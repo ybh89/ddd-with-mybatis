@@ -45,6 +45,10 @@ public class MakerService {
         return originalMaker.getId();
     }
 
+    /**
+     * 삭제할 시리즈는 originalMaker 에는 존재하지만 newMaker 에서는 존재하지않는다.
+     * 해당 시리즈는 삭제 대상이다.
+     */
     private void remove(Maker newMaker, Maker originalMaker) {
         originalMaker.getBrands().forEach(originalBrand ->
                 newMaker.getBrands().forEach(newBrand -> {
@@ -55,6 +59,10 @@ public class MakerService {
                 }));
     }
 
+    /**
+     * 추가할 브랜드, 시리즈는 newMaker 에서 id(식별자)가 존재하지않는다.
+     * 따라서 id가 없으면 추가대상이다.
+     */
     private void add(Maker newMaker, Maker originalMaker) {
         List<Brand> addBrands = originalMaker.addBrands(newMaker);
         addBrands.forEach(addBrand -> brandRepository.save(originalMaker.getId(), addBrand));
@@ -68,6 +76,10 @@ public class MakerService {
         });
     }
 
+    /**
+     * 수정할 제조사, 브랜드, 시리즈는 newMaker 에서 id(식별자)가 존재한다.
+     * 따라서 id가 있으면 수정대상이다.
+     */
     private void update(Maker newMaker, Maker originalMaker) {
         originalMaker.update(newMaker);
         makerRepository.update(originalMaker);
