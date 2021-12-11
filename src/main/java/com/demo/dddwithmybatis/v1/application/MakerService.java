@@ -39,45 +39,52 @@ public class MakerService {
         Maker newMaker = MakerAggregateFactory.from(makerUpdateRequest);
         Maker originalMaker = findById(makerUpdateRequest.getId());
 
-        // 1. 업데이트
+        update(newMaker, originalMaker);
+        add(newMaker, originalMaker);
+        remove(newMaker, originalMaker);
+        return originalMaker.getId();
+    }
+
+    private void remove(Maker newMaker, Maker originalMaker) {
+        originalMaker.getBrands().forEach(originalBrand ->
+                newMaker.getBrands().forEach(newBrand -> {
+                    if (newBrand.getId().equals(originalBrand.getId())) {
+                        List<Series> deleteSeriesList = originalBrand.deleteSeries(newBrand);
+                        deleteSeriesList.forEach(series -> seriesRepository.remove(series));
+                    }
+                }));
+    }
+
+    private void add(Maker newMaker, Maker originalMaker) {
+        List<Brand> addBrands = originalMaker.addBrands(newMaker);
+        addBrands.forEach(addBrand -> brandRepository.save(originalMaker.getId(), addBrand));
+        originalMaker.getBrands().forEach(originalBrand -> {
+            newMaker.getBrands().forEach(newBrand -> {
+                if (newBrand.getId().equals(originalBrand.getId())) {
+                    List<Series> addSeriesList = originalBrand.addSeries(newBrand);
+                    addSeriesList.forEach(addSeries -> seriesRepository.save(originalBrand.getId(), addSeries));
+                }
+            });
+        });
+    }
+
+    private void update(Maker newMaker, Maker originalMaker) {
         originalMaker.update(newMaker);
         makerRepository.update(originalMaker);
         originalMaker.getBrands().forEach(originalBrand ->
                 newMaker.getBrands().forEach(newBrand -> {
-                    if (!Objects.isNull(newBrand.getId()) && newBrand.getId().equals(originalBrand.getId()))
-                    {
+                    if (!Objects.isNull(newBrand.getId()) && newBrand.getId().equals(originalBrand.getId())) {
                         originalBrand.update(newBrand);
                         brandRepository.update(originalBrand);
-
-                        originalBrand.getSeriesList().forEach(originalSeries -> newBrand.getSeriesList()
-                                .forEach(newSeries -> {
-                            if (!Objects.isNull(newSeries.getId()) && newSeries.getId().equals(originalSeries.getId()))
-                            {
-                                originalSeries.update(newSeries);
-                                seriesRepository.update(originalSeries);
-                            }
-                        }));
+                        originalBrand.getSeriesList().forEach(originalSeries ->
+                                newBrand.getSeriesList().forEach(newSeries -> {
+                                    if (!Objects.isNull(newSeries.getId()) && newSeries.getId().equals(originalSeries.getId())) {
+                                        originalSeries.update(newSeries);
+                                        seriesRepository.update(originalSeries);
+                                    }
+                                }));
                     }
                 }));
-
-        // 2. 추가
-        List<Brand> addBrands = originalMaker.addBrands(newMaker);
-        addBrands.forEach(addBrand -> brandRepository.save(originalMaker.getId(), addBrand));
-        originalMaker.getBrands().forEach(originalBrand -> {
-            newMaker.getBrands().stream()
-                    .forEach(newBrand -> {
-                        if (newBrand.getId().equals(originalBrand.getId()))
-                        {
-                            List<Series> addSeriesList = originalBrand.addSeries(newBrand);
-                            addSeriesList.forEach(addSeries -> seriesRepository.save(originalBrand.getId(), addSeries));
-                        }
-                    });
-        });
-
-        // 3. 삭제
-        List<Brand> brands = originalMaker.removeBrands(newMaker);
-
-        return originalMaker.getId();
     }
 
     @Transactional(readOnly = true)

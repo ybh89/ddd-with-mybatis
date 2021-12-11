@@ -56,7 +56,23 @@ public class Maker {
     }
 
     public List<Brand> removeBrands(Maker newMaker) {
+        List<Brand> deleteBrands = this.brands.stream()
+                .filter(brand -> !newMaker.getBrands().contains(brand))
+                .collect(Collectors.toList());
+        this.brands.removeAll(deleteBrands);
+        return deleteBrands;
+    }
 
-        return null;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Maker maker = (Maker) o;
+        return Objects.equals(getId(), maker.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

@@ -8,4 +8,5 @@ import org.apache.ibatis.annotations.Param;
 public interface SeriesRepository {
     int save(@Param("brandId") Long brandId, @Param("series") Series series);
     int update(@Param("series") Series series);
+    int remove(@Param("series") Series series);
 }

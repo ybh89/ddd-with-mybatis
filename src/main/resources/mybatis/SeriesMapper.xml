@@ -12,4 +12,9 @@
         SET name = #{series.name}
         WHERE id = #{series.id}
     </update>
+
+    <delete id="remove">
+        DELETE FROM series
+        WHERE id = #{series.id}
+    </delete>
 </mapper>

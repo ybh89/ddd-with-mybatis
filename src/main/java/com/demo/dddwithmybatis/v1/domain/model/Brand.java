@@ -54,4 +54,26 @@ public class Brand {
         this.seriesList.addAll(newSeries);
         return newSeries;
     }
+
+    public List<Series> deleteSeries(Brand newBrand)
+    {
+        List<Series> deleteSeriesList = this.seriesList.stream()
+                .filter(series -> !newBrand.getSeriesList().contains(series))
+                .collect(Collectors.toList());
+        this.seriesList.removeAll(deleteSeriesList);
+        return deleteSeriesList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Brand brand = (Brand) o;
+        return Objects.equals(getId(), brand.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

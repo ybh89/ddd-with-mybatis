@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -37,5 +39,18 @@ public class Series {
         {
             this.name = newSeries.getName();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Series series = (Series) o;
+        return Objects.equals(getId(), series.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

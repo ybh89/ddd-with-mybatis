@@ -6,7 +6,9 @@ import com.demo.dddwithmybatis.v1.domain.model.Series;
 import com.demo.dddwithmybatis.v1.dto.maker.MakerSaveRequest;
 import com.demo.dddwithmybatis.v1.dto.maker.MakerUpdateRequest;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MakerAggregateFactory {
@@ -17,6 +19,10 @@ public class MakerAggregateFactory {
     {
         List<Brand> brands = makerSaveRequest.getBrandSaveRequests().stream()
                 .map(brandRequest -> {
+                    if (Objects.isNull(brandRequest.getSeriesRequests()))
+                    {
+                        brandRequest.setSeriesRequests(Collections.emptyList());
+                    }
                     List<Series> seriesList = brandRequest.getSeriesRequests().stream()
                             .map(seriesRequest -> Series.create(seriesRequest.getName()))
                             .collect(Collectors.toList());
@@ -29,6 +35,10 @@ public class MakerAggregateFactory {
     {
         List<Brand> brands = makerUpdateRequest.getBrandUpdateRequests().stream()
                 .map(brandRequest -> {
+                    if (Objects.isNull(brandRequest.getSeriesUpdateRequests()))
+                    {
+                        brandRequest.setSeriesUpdateRequests(Collections.emptyList());
+                    }
                     List<Series> seriesList = brandRequest.getSeriesUpdateRequests().stream()
                             .map(seriesRequest -> Series.create(seriesRequest.getId(), seriesRequest.getName()))
                             .collect(Collectors.toList());
