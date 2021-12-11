@@ -8,15 +8,17 @@ CREATE TABLE maker
 DROP TABLE IF EXISTS brand;
 CREATE TABLE brand
 (
-    id     IDENTITY        PRIMARY KEY,
-    name   VARCHAR(255)    NOT NULL
+    id          IDENTITY        PRIMARY KEY,
+    maker_id    INT,
+    name        VARCHAR(255)    NOT NULL
 );
-ALTER TABLE brand ADD FOREIGN KEY(id) REFERENCES maker(id);
+ALTER TABLE brand ADD FOREIGN KEY(maker_id) REFERENCES maker(id);
 
 DROP TABLE IF EXISTS series;
 CREATE TABLE series
 (
-    id     IDENTITY        PRIMARY KEY,
-    name   VARCHAR(255)    NOT NULL
+    id          IDENTITY        PRIMARY KEY,
+    brand_id    INT,
+    name        VARCHAR(255)    NOT NULL
 );
-ALTER TABLE series ADD FOREIGN KEY(id) REFERENCES brand(id);
+ALTER TABLE series ADD FOREIGN KEY(brand_id) REFERENCES brand(id);

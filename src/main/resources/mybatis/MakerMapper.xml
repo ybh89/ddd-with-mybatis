@@ -6,4 +6,36 @@
         INSERT INTO maker (name)
         VALUES (#{maker.name})
     </insert>
+
+    <select id="findById" resultMap="makerResultMap">
+        SELECT
+            m.id
+            , m.name
+            , b.id
+            , b.name
+            , s.name
+        FROM maker m
+            LEFT OUTER JOIN brand b
+            ON m.id = b.maker_id
+            LEFT OUTER JOIN series s
+            ON b.id = s.brand_id
+        WHERE m.id = #{id}
+    </select>
+
+    <resultMap id="makerResultMap" type="com.demo.dddwithmybatis.v1.domain.model.Maker">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <collection property="brands" resultMap="brandResultMap"/>
+    </resultMap>
+
+    <resultMap id="brandResultMap" type="com.demo.dddwithmybatis.v1.domain.model.Brand">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <collection property="seriesList" resultMap="seriesResultMap"/>
+    </resultMap>
+
+    <resultMap id="seriesResultMap" type="com.demo.dddwithmybatis.v1.domain.model.Series">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+    </resultMap>
 </mapper>
