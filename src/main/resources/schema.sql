@@ -1,0 +1,22 @@
+DROP TABLE IF EXISTS maker;
+CREATE TABLE maker
+(
+    id     IDENTITY        PRIMARY KEY,
+    name   VARCHAR(255)    NOT NULL
+);
+
+DROP TABLE IF EXISTS brand;
+CREATE TABLE brand
+(
+    id     IDENTITY        PRIMARY KEY,
+    name   VARCHAR(255)    NOT NULL
+);
+ALTER TABLE brand ADD FOREIGN KEY(id) REFERENCES maker(id);
+
+DROP TABLE IF EXISTS series;
+CREATE TABLE series
+(
+    id     IDENTITY        PRIMARY KEY,
+    name   VARCHAR(255)    NOT NULL
+);
+ALTER TABLE series ADD FOREIGN KEY(id) REFERENCES brand(id);
