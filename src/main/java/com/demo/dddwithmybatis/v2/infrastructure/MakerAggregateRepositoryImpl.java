@@ -1,49 +1,49 @@
-package com.demo.dddwithmybatis.v1.application;
+package com.demo.dddwithmybatis.v2.infrastructure;
 
-import com.demo.dddwithmybatis.v1.domain.model.Brand;
-import com.demo.dddwithmybatis.v1.domain.model.Maker;
-import com.demo.dddwithmybatis.v1.domain.model.Series;
-import com.demo.dddwithmybatis.v1.domain.repository.BrandRepository;
-import com.demo.dddwithmybatis.v1.domain.repository.MakerRepository;
-import com.demo.dddwithmybatis.v1.domain.repository.SeriesRepository;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerSaveRequest;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerResponse;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerUpdateRequest;
+import com.demo.dddwithmybatis.v2.domain.model.Brand;
+import com.demo.dddwithmybatis.v2.domain.model.Maker;
+import com.demo.dddwithmybatis.v2.domain.model.Series;
+import com.demo.dddwithmybatis.v2.domain.repository.MakerAggregateRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
+@Primary
+@Repository
 @RequiredArgsConstructor
-@Service
-public class MakerService {
-    private final MakerRepository makerRepository;
-    private final BrandRepository brandRepository;
-    private final SeriesRepository seriesRepository;
+public class MakerAggregateRepositoryImpl implements MakerAggregateRepository {
+    private final MakerRepositoryV2 makerRepository;
+    private final BrandRepositoryV2 brandRepository;
+    private final SeriesRepositoryV2 seriesRepository;
 
-    @Transactional
-    public MakerResponse create(MakerSaveRequest makerSaveRequest) {
-        Maker maker = MakerAggregateFactory.from(makerSaveRequest);
+    @Override
+    public Maker save(Maker maker) {
         makerRepository.save(maker);
         maker.getBrands().forEach(brand -> {
             brandRepository.save(maker.getId(), brand);
             brand.getSeriesList().forEach(series -> seriesRepository.save(brand.getId(), series));
         });
-        return MakerResponse.from(maker);
+        return maker;
     }
 
-    @Transactional
-    public MakerResponse update(MakerUpdateRequest makerUpdateRequest) {
-        Maker newMaker = MakerAggregateFactory.from(makerUpdateRequest);
-        Maker originalMaker = findById(makerUpdateRequest.getId());
-
+    @Override
+    public Maker update(Maker originalMaker, Maker newMaker) {
         // dirty checking
-        update(newMaker, originalMaker);
+        modify(newMaker, originalMaker);
         add(newMaker, originalMaker);
         remove(newMaker, originalMaker);
-        return MakerResponse.from(originalMaker);
+        return originalMaker;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<Maker> findById(Long id) {
+        return Optional.ofNullable(makerRepository.findById(id).orElse(null));
     }
 
     /**
@@ -67,21 +67,19 @@ public class MakerService {
     private void add(Maker newMaker, Maker originalMaker) {
         List<Brand> addBrands = originalMaker.addBrands(newMaker);
         addBrands.forEach(addBrand -> brandRepository.save(originalMaker.getId(), addBrand));
-        originalMaker.getBrands().forEach(originalBrand -> {
-            newMaker.getBrands().forEach(newBrand -> {
-                if (newBrand.getId().equals(originalBrand.getId())) {
-                    List<Series> addSeriesList = originalBrand.addSeries(newBrand);
-                    addSeriesList.forEach(addSeries -> seriesRepository.save(originalBrand.getId(), addSeries));
-                }
-            });
-        });
+        originalMaker.getBrands().forEach(originalBrand -> newMaker.getBrands().forEach(newBrand -> {
+            if (newBrand.getId().equals(originalBrand.getId())) {
+                List<Series> addSeriesList = originalBrand.addSeries(newBrand);
+                addSeriesList.forEach(addSeries -> seriesRepository.save(originalBrand.getId(), addSeries));
+            }
+        }));
     }
 
     /**
      * 수정할 제조사, 브랜드, 시리즈는 newMaker 에서 id(식별자)가 존재한다.
      * 따라서 id가 있으면 수정대상이다.
      */
-    private void update(Maker newMaker, Maker originalMaker) {
+    private void modify(Maker newMaker, Maker originalMaker) {
         originalMaker.update(newMaker);
         makerRepository.update(originalMaker);
         originalMaker.getBrands().forEach(originalBrand ->
@@ -98,16 +96,5 @@ public class MakerService {
                                 }));
                     }
                 }));
-    }
-
-    @Transactional(readOnly = true)
-    public MakerResponse retrieve(Long makerId) {
-        Maker maker = findById(makerId);
-        return MakerResponse.from(maker);
-    }
-
-    private Maker findById(Long makerId) {
-        return makerRepository.findById(makerId)
-                .orElseThrow(() -> new IllegalStateException("제조사를 찾을 수 없습니다."));
     }
 }

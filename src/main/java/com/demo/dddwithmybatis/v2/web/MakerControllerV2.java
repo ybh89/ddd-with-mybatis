@@ -1,18 +1,18 @@
-package com.demo.dddwithmybatis.v1.web;
+package com.demo.dddwithmybatis.v2.web;
 
-import com.demo.dddwithmybatis.v1.application.MakerService;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerSaveRequest;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerResponse;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerUpdateRequest;
+import com.demo.dddwithmybatis.v2.application.MakerServiceV2;
+import com.demo.dddwithmybatis.v2.dto.maker.MakerResponse;
+import com.demo.dddwithmybatis.v2.dto.maker.MakerSaveRequest;
+import com.demo.dddwithmybatis.v2.dto.maker.MakerUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/maker")
+@RequestMapping("/V2/maker")
 @RequiredArgsConstructor
 @RestController
-public class MakerController {
-    private final MakerService makerService;
+public class MakerControllerV2 {
+    private final MakerServiceV2 makerService;
 
     @PostMapping
     public ResponseEntity<MakerResponse> create(MakerSaveRequest makerSaveRequest)

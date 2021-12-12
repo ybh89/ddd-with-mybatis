@@ -1,12 +1,12 @@
-package com.demo.dddwithmybatis.v1.application;
+package com.demo.dddwithmybatis.v2.application;
 
-import com.demo.dddwithmybatis.v1.dto.brand.BrandSaveRequest;
-import com.demo.dddwithmybatis.v1.dto.brand.BrandUpdateRequest;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerResponse;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerSaveRequest;
-import com.demo.dddwithmybatis.v1.dto.maker.MakerUpdateRequest;
-import com.demo.dddwithmybatis.v1.dto.series.SeriesSaveRequest;
-import com.demo.dddwithmybatis.v1.dto.series.SeriesUpdateRequest;
+import com.demo.dddwithmybatis.v2.dto.brand.BrandSaveRequest;
+import com.demo.dddwithmybatis.v2.dto.brand.BrandUpdateRequest;
+import com.demo.dddwithmybatis.v2.dto.maker.MakerResponse;
+import com.demo.dddwithmybatis.v2.dto.maker.MakerSaveRequest;
+import com.demo.dddwithmybatis.v2.dto.maker.MakerUpdateRequest;
+import com.demo.dddwithmybatis.v2.dto.series.SeriesSaveRequest;
+import com.demo.dddwithmybatis.v2.dto.series.SeriesUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,11 +18,10 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("통합 테스트")
 @SpringBootTest
-class MakerServiceTest {
+public class MakerServiceTest {
     @Autowired
-    private MakerService makerService;
+    private MakerServiceV2 makerService;
 
     private MakerResponse initMakerResponse;
 
