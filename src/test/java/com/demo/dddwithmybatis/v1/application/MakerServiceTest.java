@@ -13,12 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("통합 테스트")
+@DisplayName("V1")
 @SpringBootTest
 class MakerServiceTest {
     @Autowired
@@ -30,8 +32,8 @@ class MakerServiceTest {
     void setUp()
     {
         SeriesSaveRequest seriesRequest = new SeriesSaveRequest("시리즈");
-        BrandSaveRequest brandSaveRequest = new BrandSaveRequest("브랜드", List.of(seriesRequest));
-        MakerSaveRequest makerSaveRequest = new MakerSaveRequest("제조사", List.of(brandSaveRequest));
+        BrandSaveRequest brandSaveRequest = new BrandSaveRequest("브랜드", Collections.singletonList(seriesRequest));
+        MakerSaveRequest makerSaveRequest = new MakerSaveRequest("제조사", Collections.singletonList(brandSaveRequest));
         initMakerResponse = makerService.create(makerSaveRequest);
     }
 
@@ -155,7 +157,7 @@ class MakerServiceTest {
         List<BrandUpdateRequest> brandUpdateRequests = makerResponse.getBrandResponses().stream()
                 .map(brandResponse -> new BrandUpdateRequest(makerResponse.getId(), "브랜드", null))
                 .collect(Collectors.toList());
-        brandUpdateRequests.add(new BrandUpdateRequest(null, "추가브랜드", List.of(new SeriesUpdateRequest(null, "추가시리즈"))));
+        brandUpdateRequests.add(new BrandUpdateRequest(null, "추가브랜드", Collections.singletonList(new SeriesUpdateRequest(null, "추가시리즈"))));
         MakerUpdateRequest makerUpdateRequest = new MakerUpdateRequest(makerResponse.getId(), "수정제조사", brandUpdateRequests);
         MakerResponse updateMakerResponse = makerService.update(makerUpdateRequest);
 

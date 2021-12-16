@@ -5,7 +5,7 @@
 * 아이디어가 있다면 버전 패키지를 만들고 구현해볼 수 있다.
 
 ## 기술 스택
-* Java 11
+* Java 1.8
 * h2 in-memory
 * mybatis
 * Spring Data JDBC
