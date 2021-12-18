@@ -1,9 +1,9 @@
-package com.demo.dddwithmybatis.v2.infrastructure;
+package com.demo.dddwithmybatis.v3.infrastructure;
 
-import com.demo.dddwithmybatis.v2.domain.model.Brand;
-import com.demo.dddwithmybatis.v2.domain.model.Maker;
-import com.demo.dddwithmybatis.v2.domain.model.Series;
-import com.demo.dddwithmybatis.v2.domain.repository.MakerAggregateRepository;
+import com.demo.dddwithmybatis.v3.domain.model.Brand;
+import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.model.Series;
+import com.demo.dddwithmybatis.v3.domain.repository.MakerAggregateRepositoryV3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -16,10 +16,11 @@ import java.util.Optional;
 @Primary
 @Repository
 @RequiredArgsConstructor
-public class MakerAggregateRepositoryImpl implements MakerAggregateRepository {
-    private final MakerRepositoryV2 makerRepository;
-    private final BrandRepositoryV2 brandRepository;
-    private final SeriesRepositoryV2 seriesRepository;
+public class MakerAggregateRepositoryV3Impl implements MakerAggregateRepositoryV3
+{
+    private final MakerRepositoryV3 makerRepository;
+    private final BrandRepositoryV3 brandRepository;
+    private final SeriesRepositoryV3 seriesRepository;
 
     @Override
     public Maker save(Maker maker) {
@@ -77,21 +78,32 @@ public class MakerAggregateRepositoryImpl implements MakerAggregateRepository {
 
     /**
      * 수정할 제조사, 브랜드, 시리즈는 newMaker 에서 id(식별자)가 존재한다.
-     * 따라서 id가 있으면 수정대상이다.
+     * 객체의 필드값을 비교해서 originalMaker 와 newMaker 의 값이 다르면 수정 대상이다.
      */
     private void modify(Maker newMaker, Maker originalMaker) {
-        originalMaker.update(newMaker);
-        makerRepository.update(originalMaker);
+        if (EntityComparator.isModified(newMaker, originalMaker))
+        {
+            originalMaker.update(newMaker);
+            makerRepository.update(originalMaker);
+        }
+
         originalMaker.getBrands().forEach(originalBrand ->
                 newMaker.getBrands().forEach(newBrand -> {
                     if (!Objects.isNull(newBrand.getId()) && newBrand.getId().equals(originalBrand.getId())) {
-                        originalBrand.update(newBrand);
-                        brandRepository.update(originalBrand);
+                        if (EntityComparator.isModified(originalBrand, newBrand))
+                        {
+                            originalBrand.update(newBrand);
+                            brandRepository.update(originalBrand);
+                        }
+
                         originalBrand.getSeriesList().forEach(originalSeries ->
                                 newBrand.getSeriesList().forEach(newSeries -> {
                                     if (!Objects.isNull(newSeries.getId()) && newSeries.getId().equals(originalSeries.getId())) {
-                                        originalSeries.update(newSeries);
-                                        seriesRepository.update(originalSeries);
+                                        if (EntityComparator.isModified(originalSeries, newSeries))
+                                        {
+                                            originalSeries.update(newSeries);
+                                            seriesRepository.update(originalSeries);
+                                        }
                                     }
                                 }));
                     }

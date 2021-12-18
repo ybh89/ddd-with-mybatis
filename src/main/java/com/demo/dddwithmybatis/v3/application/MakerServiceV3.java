@@ -1,18 +1,19 @@
-package com.demo.dddwithmybatis.v2.application;
+package com.demo.dddwithmybatis.v3.application;
 
-import com.demo.dddwithmybatis.v2.domain.model.Maker;
-import com.demo.dddwithmybatis.v2.domain.repository.MakerAggregateRepositoryV2;
-import com.demo.dddwithmybatis.v2.dto.maker.MakerResponse;
-import com.demo.dddwithmybatis.v2.dto.maker.MakerSaveRequest;
-import com.demo.dddwithmybatis.v2.dto.maker.MakerUpdateRequest;
+import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.repository.MakerAggregateRepositoryV3;
+import com.demo.dddwithmybatis.v3.dto.maker.MakerResponse;
+import com.demo.dddwithmybatis.v3.dto.maker.MakerSaveRequest;
+import com.demo.dddwithmybatis.v3.dto.maker.MakerUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class MakerServiceV2 {
-    private final MakerAggregateRepositoryV2 makerAggregateRepository;
+public class MakerServiceV3
+{
+    private final MakerAggregateRepositoryV3 makerAggregateRepository;
 
     @Transactional
     public MakerResponse create(MakerSaveRequest makerSaveRequest) {

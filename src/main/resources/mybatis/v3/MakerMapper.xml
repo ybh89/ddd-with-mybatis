@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.dddwithmybatis.v3.infrastructure.MakerRepositoryV3">
+    <insert id="save" useGeneratedKeys="true" keyProperty="maker.id">
+        INSERT INTO maker (name)
+        VALUES (#{maker.name})
+    </insert>
+
+    <select id="findById" resultMap="makerResultMap">
+        SELECT
+            m.id maker_id
+            , m.name maker_name
+            , b.id brand_id
+            , b.name brand_name
+            , s.id series_id
+            , s.name series_name
+        FROM maker m
+            LEFT OUTER JOIN brand b
+            ON m.id = b.maker_id
+            LEFT OUTER JOIN series s
+            ON b.id = s.brand_id
+        WHERE m.id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE maker
+        SET name = #{maker.name}
+        WHERE id = #{maker.id}
+    </update>
+
+    <resultMap id="makerResultMap" type="com.demo.dddwithmybatis.v3.domain.model.Maker">
+        <id column="maker_id" property="id"/>
+        <result column="maker_name" property="name"/>
+        <collection property="brands" resultMap="brandResultMap"/>
+    </resultMap>
+
+    <resultMap id="brandResultMap" type="com.demo.dddwithmybatis.v3.domain.model.Brand">
+        <id column="brand_id" property="id"/>
+        <result column="brand_name" property="name"/>
+        <collection property="seriesList" resultMap="seriesResultMap"/>
+    </resultMap>
+
+    <resultMap id="seriesResultMap" type="com.demo.dddwithmybatis.v3.domain.model.Series">
+        <id column="series_id" property="id"/>
+        <result column="series_name" property="name"/>
+    </resultMap>
+</mapper>

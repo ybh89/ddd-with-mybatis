@@ -4,7 +4,8 @@ import com.demo.dddwithmybatis.v2.domain.model.Maker;
 
 import java.util.Optional;
 
-public interface MakerAggregateRepository {
+public interface MakerAggregateRepositoryV2
+{
     Maker save(Maker maker);
     Maker update(Maker originalMaker, Maker newMaker);
     Optional<Maker> findById(Long id);

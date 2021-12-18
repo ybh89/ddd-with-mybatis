@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.dddwithmybatis.v3.infrastructure.BrandRepositoryV3">
+    <insert id="save" useGeneratedKeys="true" keyProperty="brand.id">
+        INSERT INTO brand (maker_id, name)
+        VALUES (#{makerId}, #{brand.name})
+    </insert>
+
+    <update id="update">
+        UPDATE brand
+        SET name = #{brand.name}
+        WHERE id = #{brand.id}
+    </update>
+
+</mapper>
