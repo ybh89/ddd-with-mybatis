@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class EntityComparator
 {
-    public static boolean isModified(Entity originalEntity, Entity newEntity)
+    public static boolean isModified(final Entity originalEntity, final Entity newEntity)
     {
         Class<? extends Entity> originalEntityClass = originalEntity.getClass();
         Class<? extends Entity> newEntityClass = newEntity.getClass();
@@ -35,24 +35,21 @@ public class EntityComparator
                 {
                     continue;
                 }
-                if (Objects.isNull(originalFieldValue) && Objects.nonNull(newFieldValue))
-                {
-                    return true;
-                }
-                if (!originalFieldValue.equals(newFieldValue))
+                if (Objects.isNull(originalFieldValue) || !originalFieldValue.equals(newFieldValue))
                 {
                     return true;
                 }
             }
             catch (IllegalAccessException e)
             {
+                // 사실상 발생 불가
                 throw new IllegalStateException("값에 접근할 수 없습니다.", e);
             }
             catch (NoSuchFieldException e)
             {
+                // 사실상 발생 불가
                 throw new IllegalArgumentException("필드를 찾을 수 없습니다", e);
             }
-
         }
         return false;
     }
