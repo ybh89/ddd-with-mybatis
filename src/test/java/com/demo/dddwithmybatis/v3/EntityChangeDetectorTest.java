@@ -1,6 +1,7 @@
 package com.demo.dddwithmybatis.v3;
 
 import com.demo.dddwithmybatis.v3.domain.Entity;
+import com.demo.dddwithmybatis.v3.domain.IgnoreEntityChangeDetector;
 import com.demo.dddwithmybatis.v3.domain.model.Brand;
 import com.demo.dddwithmybatis.v3.domain.model.Maker;
 import com.demo.dddwithmybatis.v3.infrastructure.EntityChangeDetector;
@@ -110,12 +111,46 @@ public class EntityChangeDetectorTest
             .hasMessageStartingWith("엔티티가 아닙니다.");
     }
 
+    @DisplayName("IgnoreEntityChangeDetector 어노테이션 적용 클래스 무시")
+    @Test
+    void IgnoreEntityChangeDetector_어노테이션적용_클래스_무시()
+    {
+        // given
+        TestRegister testRegister1 = new TestRegister("creatorId", null, null, null);
+        TestEntity originalTestEntity = new TestEntity(1L, "테스트", "ignore", null, null, testRegister1);
+        TestRegister testRegister2 = new TestRegister(null, null, "updaterId", null);
+        TestEntity newTestEntity = new TestEntity(1L, "테스트", "ignore", null, null, testRegister2);
+
+        // when
+        boolean modified = entityChangeDetector.isModified(originalTestEntity, newTestEntity);
+
+        // then
+        assertThat(modified).isFalse();
+    }
+
+    @DisplayName("IgnoreEntityChangeDetector 어노테이션 적용 필드 무시")
+    @Test
+    void IgnoreEntityChangeDetector_어노테이션적용_필드_무시()
+    {
+        // given
+        TestRegister testRegister1 = new TestRegister("creatorId", null, null, null);
+        TestEntity originalTestEntity = new TestEntity(1L, "테스트", "ignore1", null, null, testRegister1);
+        TestEntity newTestEntity = new TestEntity(1L, "테스트", "ignore2", null, null, testRegister1);
+
+        // when
+        boolean modified = entityChangeDetector.isModified(originalTestEntity, newTestEntity);
+
+        // then
+        assertThat(modified).isFalse();
+    }
+
     @Getter
     @Entity
     static class TestEntity
     {
         private Long id;
         private String name;
+        @IgnoreEntityChangeDetector
         private String ignore;
         private List<ChildEntity> childEntities;
         private ChildEntity childEntity;
@@ -146,6 +181,7 @@ public class EntityChangeDetectorTest
         }
     }
 
+    @IgnoreEntityChangeDetector
     static class TestRegister
     {
         private final String creatorId;

@@ -1,6 +1,7 @@
 package com.demo.dddwithmybatis.v3.infrastructure;
 
 import com.demo.dddwithmybatis.v3.domain.Entity;
+import com.demo.dddwithmybatis.v3.domain.IgnoreEntityChangeDetector;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -20,6 +21,9 @@ public class EntityChangeDetector
 
         for (Field originalField : originalEntityClass.getDeclaredFields())
         {
+            // 클래스, 필드에 IgnoreEntityChangeDetector 어노테이션이 선언된 객체이면 비교 대상에서 제외
+            if (hasIgnoreEntityChangeDetectorAnnotation(originalField)) continue;
+
             // 엔티티 필드는 비교 대상에서 제외
             if (isEntity(originalField)) continue;
 
@@ -30,9 +34,6 @@ public class EntityChangeDetector
                 Field newField = newEntityClass.getDeclaredField(originalField.getName());
                 newField.setAccessible(true);
                 Object newFieldValue = newField.get(newEntity);
-
-                System.out.println("field name: " + originalField.getName() + " originalFieldValue: "
-                    + originalFieldValue + " newFieldValue: " + newFieldValue);
 
                 if (Objects.isNull(originalFieldValue) && Objects.isNull(newFieldValue))
                 {
@@ -93,6 +94,16 @@ public class EntityChangeDetector
             }
         }
         if (Objects.nonNull(field.getType().getDeclaredAnnotation(Entity.class)))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean hasIgnoreEntityChangeDetectorAnnotation(Field originalField)
+    {
+        if (Objects.nonNull(originalField.getType().getDeclaredAnnotation(IgnoreEntityChangeDetector.class))
+            || Objects.nonNull(originalField.getDeclaredAnnotation(IgnoreEntityChangeDetector.class)))
         {
             return true;
         }
