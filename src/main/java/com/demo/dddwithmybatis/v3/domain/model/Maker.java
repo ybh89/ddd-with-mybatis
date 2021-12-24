@@ -1,5 +1,6 @@
 package com.demo.dddwithmybatis.v3.domain.model;
 
+import com.demo.dddwithmybatis.v3.domain.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,8 @@ import java.util.stream.Collectors;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Maker implements Entity {
+@Entity
+public class Maker {
     private Long id;
     private String name;
     private List<Brand> brands;
@@ -53,11 +55,6 @@ public class Maker implements Entity {
 
         this.brands.addAll(newBrands);
         return newBrands;
-    }
-
-    public void changeName(String name)
-    {
-        this.name = name;
     }
 
     @Override

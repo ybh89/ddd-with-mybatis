@@ -1,9 +1,13 @@
-package com.demo.dddwithmybatis.v3.infrastructure;
+package com.demo.dddwithmybatis.v3.infrastructure.repository;
 
 import com.demo.dddwithmybatis.v3.domain.model.Brand;
 import com.demo.dddwithmybatis.v3.domain.model.Maker;
 import com.demo.dddwithmybatis.v3.domain.model.Series;
 import com.demo.dddwithmybatis.v3.domain.repository.MakerAggregateRepositoryV3;
+import com.demo.dddwithmybatis.v3.infrastructure.mapper.BrandMapperV3;
+import com.demo.dddwithmybatis.v3.infrastructure.EntityChangeDetector;
+import com.demo.dddwithmybatis.v3.infrastructure.mapper.MakerMapperV3;
+import com.demo.dddwithmybatis.v3.infrastructure.mapper.SeriesMapperV3;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -18,9 +22,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MakerAggregateRepositoryV3Impl implements MakerAggregateRepositoryV3
 {
-    private final MakerRepositoryV3 makerRepository;
-    private final BrandRepositoryV3 brandRepository;
-    private final SeriesRepositoryV3 seriesRepository;
+    private final MakerMapperV3 makerRepository;
+    private final BrandMapperV3 brandRepository;
+    private final SeriesMapperV3 seriesRepository;
+    private final EntityChangeDetector entityChangeDetector;
 
     @Override
     public Maker save(Maker maker)
@@ -92,7 +97,7 @@ public class MakerAggregateRepositoryV3Impl implements MakerAggregateRepositoryV
      */
     private void modify(Maker newMaker, Maker originalMaker)
     {
-        if (EntityComparator.isModified(newMaker, originalMaker))
+        if (entityChangeDetector.isModified(newMaker, originalMaker))
         {
             originalMaker.update(newMaker);
             makerRepository.update(originalMaker);
@@ -103,7 +108,7 @@ public class MakerAggregateRepositoryV3Impl implements MakerAggregateRepositoryV
             {
                 if (!Objects.isNull(newBrand.getId()) && newBrand.getId().equals(originalBrand.getId()))
                 {
-                    if (EntityComparator.isModified(originalBrand, newBrand))
+                    if (entityChangeDetector.isModified(originalBrand, newBrand))
                     {
                         originalBrand.update(newBrand);
                         brandRepository.update(originalBrand);
@@ -114,7 +119,7 @@ public class MakerAggregateRepositoryV3Impl implements MakerAggregateRepositoryV
                         {
                             if (!Objects.isNull(newSeries.getId()) && newSeries.getId().equals(originalSeries.getId()))
                             {
-                                if (EntityComparator.isModified(originalSeries, newSeries))
+                                if (entityChangeDetector.isModified(originalSeries, newSeries))
                                 {
                                     originalSeries.update(newSeries);
                                     seriesRepository.update(originalSeries);

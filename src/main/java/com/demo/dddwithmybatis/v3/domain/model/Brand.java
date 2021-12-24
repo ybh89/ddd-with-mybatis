@@ -1,5 +1,6 @@
 package com.demo.dddwithmybatis.v3.domain.model;
 
+import com.demo.dddwithmybatis.v3.domain.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,8 @@ import java.util.stream.Collectors;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Brand implements Entity {
+@Entity
+public class Brand {
     private Long id;
     private String name;
 

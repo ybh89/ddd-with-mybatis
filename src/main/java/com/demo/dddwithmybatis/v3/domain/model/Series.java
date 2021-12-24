@@ -1,5 +1,6 @@
 package com.demo.dddwithmybatis.v3.domain.model;
 
+import com.demo.dddwithmybatis.v3.domain.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,8 @@ import java.util.Objects;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Series implements Entity {
+@Entity
+public class Series {
     private Long id;
     private String name;
 
