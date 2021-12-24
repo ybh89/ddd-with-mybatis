@@ -80,7 +80,11 @@ public class MakerAggregateRepositoryV3Impl implements MakerAggregateRepositoryV
     private void add(Maker newMaker, Maker originalMaker)
     {
         List<Brand> addBrands = originalMaker.addBrands(newMaker);
-        addBrands.forEach(addBrand -> brandRepository.save(originalMaker.getId(), addBrand));
+        addBrands.forEach(addBrand -> {
+            brandRepository.save(originalMaker.getId(), addBrand);
+            addBrand.getSeriesList().forEach(series -> seriesRepository.save(addBrand.getId(), series));
+        });
+
         originalMaker.getBrands().forEach(originalBrand -> newMaker.getBrands().forEach(newBrand ->
         {
             if (newBrand.getId().equals(originalBrand.getId()))
