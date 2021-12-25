@@ -208,4 +208,39 @@ public class MakerServiceTest
         assertThat(updatedMakerResponse.getBrandResponses().get(1).getName()).isEqualTo("추가브랜드");
         assertThat(updatedMakerResponse.getBrandResponses().get(1).getSeriesResponses().get(0).getName()).isEqualTo("추가시리즈");
     }
+
+    @DisplayName("제조사 동의어, 브랜드 동의어 교체")
+    @Test
+    void 제조사동의어_브랜드동의어_교체()
+    {
+        // given
+        MakerResponse makerResponse = makerService.retrieve(initMakerResponse.getId());
+
+        // when
+        List<BrandUpdateRequest> brandUpdateRequests = makerResponse.getBrandResponses().stream()
+            .map(brandResponse -> {
+                List<SeriesUpdateRequest> seriesUpdateRequests = brandResponse.getSeriesResponses().stream()
+                    .map(seriesResponse -> new SeriesUpdateRequest(seriesResponse.getId(), "수정시리즈"))
+                    .collect(Collectors.toList());
+                return BrandUpdateRequest.builder()
+                    .id(brandResponse.getId())
+                    .name("수정브랜드")
+                    .brandSynonyms(Arrays.asList("교체브랜드동의어1", "교체브랜드동의어2"))
+                    .seriesUpdateRequests(seriesUpdateRequests)
+                    .build();
+            }).collect(Collectors.toList());
+        MakerUpdateRequest makerUpdateRequest = MakerUpdateRequest.builder()
+            .id(makerResponse.getId())
+            .name("수정제조사")
+            .makerSynonyms(Arrays.asList("교체제조사동의어1", "교체제조사동의어2"))
+            .brandUpdateRequests(brandUpdateRequests)
+            .build();
+        MakerResponse updateMakerResponse = makerService.update(makerUpdateRequest);
+
+        // then
+        MakerResponse updatedMakerResponse = makerService.retrieve(updateMakerResponse.getId());
+        assertThat(updatedMakerResponse.getMakerSynonyms()).containsExactly("교체제조사동의어1", "교체제조사동의어2");
+        assertThat(updatedMakerResponse.getBrandResponses().get(0).getBrandSynonyms())
+            .containsExactly("교체브랜드동의어1", "교체브랜드동의어2");
+    }
 }

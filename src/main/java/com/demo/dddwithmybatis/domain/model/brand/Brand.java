@@ -3,6 +3,7 @@ package com.demo.dddwithmybatis.domain.model.brand;
 import com.demo.dddwithmybatis.domain.Entity;
 import com.demo.dddwithmybatis.domain.model.Series;
 import com.demo.dddwithmybatis.domain.model.URL;
+import com.demo.dddwithmybatis.domain.model.maker.Maker;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -94,5 +95,15 @@ public class Brand {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public void changeBrandSynonyms(Brand newBrand)
+    {
+        brandSynonyms.clear();
+        if (Objects.isNull(newBrand.getBrandSynonyms()))
+        {
+            return;
+        }
+        brandSynonyms.addAll(newBrand.getBrandSynonyms());
     }
 }

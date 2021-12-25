@@ -85,4 +85,14 @@ public class Maker {
     public int hashCode() {
         return Objects.hash(getId());
     }
+
+    public void changeMakerSynonyms(Maker newMaker)
+    {
+        makerSynonyms.clear();
+        if (Objects.isNull(newMaker.getMakerSynonyms()))
+        {
+            return;
+        }
+        makerSynonyms.addAll(newMaker.getMakerSynonyms());
+    }
 }

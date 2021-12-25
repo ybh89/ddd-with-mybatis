@@ -11,7 +11,6 @@ import com.demo.dddwithmybatis.infrastructure.mapper.SeriesMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -48,10 +47,31 @@ public class MakerAggregateRepositoryImpl implements MakerAggregateRepository
         modify(newMaker, originalMaker);
         add(newMaker, originalMaker);
         remove(newMaker, originalMaker);
+        change(newMaker, originalMaker);
         return originalMaker;
     }
 
-    @Transactional(readOnly = true)
+    /**
+     * 값 타입 컬렉션인 제조사 동의어, 브랜드 동의어는 테이블이 따로 존재하므로 전체 delete 후, 전체 insert 를 한다.
+     */
+    private void change(Maker newMaker, Maker originalMaker)
+    {
+        originalMaker.changeMakerSynonyms(newMaker);
+        makerMapper.removeMakerSynonyms(originalMaker);
+        makerMapper.saveMakerSynonyms(originalMaker);
+
+        for (Brand originalBrand : originalMaker.getBrands())
+        {
+            newMaker.getBrands().stream()
+                    .filter(newBrand -> originalBrand.getId().equals(newBrand.getId()))
+                        .forEach(brand -> {
+                            originalBrand.changeBrandSynonyms(brand);
+                            brandMapper.removeBrandSynonyms(originalBrand);
+                            brandMapper.saveBrandSynonyms(originalBrand);
+                        });
+        }
+    }
+
     @Override
     public Optional<Maker> findById(Long id)
     {
