@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.dddwithmybatis.infrastructure.mapper.MakerMapper">
+    <insert id="save" useGeneratedKeys="true" keyProperty="maker.id">
+        INSERT INTO maker (name)
+        VALUES (#{maker.name})
+    </insert>
+
+    <select id="findById" resultMap="makerResultMap">
+        SELECT
+            m.id maker_id
+            , m.name maker_name
+            , ms.name maker_synonym
+            , m.site_url maker_site_url
+            , b.id brand_id
+            , b.name brand_name
+            , bs.name brand_synonym
+            , b.site_url brand_site_url
+            , s.id series_id
+            , s.name series_name
+        FROM maker m
+            LEFT OUTER JOIN brand b
+            ON m.id = b.maker_id
+            LEFT OUTER JOIN series s
+            ON b.id = s.brand_id
+            LEFT OUTER JOIN maker_synonym ms
+            ON m.id = ms.maker_id
+            LEFT OUTER JOIN brand_synonym bs
+            ON b.id = bs.brand_id
+        WHERE m.id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE maker
+        SET name = #{maker.name}
+        WHERE id = #{maker.id}
+    </update>
+
+    <resultMap id="makerResultMap" type="com.demo.dddwithmybatis.domain.model.maker.Maker">
+        <id column="maker_id" property="id"/>
+        <result column="maker_name" property="name"/>
+        <result column="maker_site_url" property="siteUrl" typeHandler="com.demo.dddwithmybatis.infrastructure.handler.URLTypeHandler"/>
+        <collection property="makerSynonyms" resultMap="makerSynonymResultMap"/>
+        <collection property="brands" resultMap="brandResultMap"/>
+    </resultMap>
+
+    <resultMap id="brandResultMap" type="com.demo.dddwithmybatis.domain.model.brand.Brand">
+        <id column="brand_id" property="id"/>
+        <result column="brand_name" property="name"/>
+        <result column="brand_site_url" property="siteUrl" typeHandler="com.demo.dddwithmybatis.infrastructure.handler.URLTypeHandler"/>
+        <collection property="brandSynonyms" resultMap="brandSynonymResultMap"/>
+        <collection property="seriesList" resultMap="seriesResultMap"/>
+    </resultMap>
+
+    <resultMap id="seriesResultMap" type="com.demo.dddwithmybatis.domain.model.Series">
+        <id column="series_id" property="id"/>
+        <result column="series_name" property="name"/>
+    </resultMap>
+
+    <resultMap id="makerSynonymResultMap" type="com.demo.dddwithmybatis.domain.model.maker.MakerSynonym">
+        <constructor>
+            <arg column="maker_synonym" name="name"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="brandSynonymResultMap" type="com.demo.dddwithmybatis.domain.model.brand.BrandSynonym">
+        <constructor>
+            <arg column="brand_synonym" name="name"/>
+        </constructor>
+    </resultMap>
+</mapper>

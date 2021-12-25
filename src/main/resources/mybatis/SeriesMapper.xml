@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.dddwithmybatis.infrastructure.mapper.SeriesMapper">
+    <insert id="save" useGeneratedKeys="true" keyProperty="series.id">
+        INSERT INTO series (brand_id, name)
+        VALUES (#{brandId}, #{series.name})
+    </insert>
+
+    <update id="update">
+        UPDATE series
+        SET name = #{series.name}
+        WHERE id = #{series.id}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM series
+        WHERE id = #{series.id}
+    </delete>
+</mapper>
