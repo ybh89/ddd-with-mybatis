@@ -15,5 +15,7 @@ import java.util.List;
 @Getter
 public class BrandSaveRequest {
     private String name;
+    private String siteUrl;
+    private List<String> brandSynonyms = new ArrayList<>();
     private List<SeriesSaveRequest> seriesRequests = new ArrayList<>();
 }

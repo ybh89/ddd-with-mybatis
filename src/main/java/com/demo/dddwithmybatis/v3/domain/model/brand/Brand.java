@@ -1,6 +1,8 @@
-package com.demo.dddwithmybatis.v3.domain.model;
+package com.demo.dddwithmybatis.v3.domain.model.brand;
 
 import com.demo.dddwithmybatis.v3.domain.Entity;
+import com.demo.dddwithmybatis.v3.domain.model.Series;
+import com.demo.dddwithmybatis.v3.domain.model.URL;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,27 +20,25 @@ import java.util.stream.Collectors;
 public class Brand {
     private Long id;
     private String name;
+    private URL siteUrl;
+    private List<BrandSynonym> brandSynonyms;
 
     private List<Series> seriesList = new ArrayList<>();
 
-    private Brand(String name, List<Series> seriesList) {
+    private Brand(Long id, String name, URL siteUrl, List<Series> seriesList, List<BrandSynonym> brandSynonyms) {
         this.name = name;
+        this.siteUrl = siteUrl;
+        this.brandSynonyms = brandSynonyms;
         this.seriesList = seriesList;
-    }
-
-    private Brand(Long id, String name, List<Series> seriesList) {
-        this(name, seriesList);
         this.id = id;
     }
 
-    public static Brand create(String name, List<Series> seriesList)
+    public static Brand create(Long id, String name, List<String> brandSynonymNames, String siteUrl, List<Series> seriesList)
     {
-        return new Brand(name, seriesList);
-    }
-
-    public static Brand create(Long id, String name, List<Series> seriesList)
-    {
-        return new Brand(id, name, seriesList);
+        List<BrandSynonym> brandSynonyms = brandSynonymNames.stream()
+            .map(BrandSynonym::new)
+            .collect(Collectors.toList());
+        return new Brand(id, name, new URL(siteUrl), seriesList, brandSynonyms);
     }
 
     public void update(Brand newBrand) {
@@ -64,6 +64,18 @@ public class Brand {
                 .collect(Collectors.toList());
         this.seriesList.removeAll(removeSeriesList);
         return removeSeriesList;
+    }
+
+    public String siteUrl()
+    {
+        return this.siteUrl.value();
+    }
+
+    public List<String> brandSynonymNames()
+    {
+        return brandSynonyms.stream()
+            .map(BrandSynonym::value)
+            .collect(Collectors.toList());
     }
 
     @Override

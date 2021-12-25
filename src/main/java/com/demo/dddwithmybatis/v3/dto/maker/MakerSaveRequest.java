@@ -15,5 +15,7 @@ import java.util.List;
 @Getter
 public class MakerSaveRequest {
     private String name;
+    private String siteUrl;
+    private List<String> makerSynonyms = new ArrayList<>();
     private List<BrandSaveRequest> brandSaveRequests = new ArrayList<>();
 }

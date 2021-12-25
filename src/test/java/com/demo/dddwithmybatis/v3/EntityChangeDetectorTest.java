@@ -2,8 +2,8 @@ package com.demo.dddwithmybatis.v3;
 
 import com.demo.dddwithmybatis.v3.domain.Entity;
 import com.demo.dddwithmybatis.v3.domain.IgnoreEntityChangeDetector;
-import com.demo.dddwithmybatis.v3.domain.model.Brand;
-import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.model.brand.Brand;
+import com.demo.dddwithmybatis.v3.domain.model.maker.Maker;
 import com.demo.dddwithmybatis.v3.infrastructure.EntityChangeDetector;
 import lombok.Getter;
 import org.junit.jupiter.api.DisplayName;

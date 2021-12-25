@@ -1,6 +1,6 @@
 package com.demo.dddwithmybatis.v3.infrastructure.mapper;
 
-import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.model.maker.Maker;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

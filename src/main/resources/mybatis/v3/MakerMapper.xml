@@ -29,13 +29,13 @@
         WHERE id = #{maker.id}
     </update>
 
-    <resultMap id="makerResultMap" type="com.demo.dddwithmybatis.v3.domain.model.Maker">
+    <resultMap id="makerResultMap" type="com.demo.dddwithmybatis.v3.domain.model.maker.Maker">
         <id column="maker_id" property="id"/>
         <result column="maker_name" property="name"/>
         <collection property="brands" resultMap="brandResultMap"/>
     </resultMap>
 
-    <resultMap id="brandResultMap" type="com.demo.dddwithmybatis.v3.domain.model.Brand">
+    <resultMap id="brandResultMap" type="com.demo.dddwithmybatis.v3.domain.model.brand.Brand">
         <id column="brand_id" property="id"/>
         <result column="brand_name" property="name"/>
         <collection property="seriesList" resultMap="seriesResultMap"/>

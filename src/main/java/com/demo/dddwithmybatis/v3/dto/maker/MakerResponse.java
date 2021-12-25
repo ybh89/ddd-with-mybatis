@@ -1,6 +1,6 @@
 package com.demo.dddwithmybatis.v3.dto.maker;
 
-import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.model.maker.Maker;
 import com.demo.dddwithmybatis.v3.dto.brand.BrandResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,12 +20,14 @@ import java.util.stream.Collectors;
 public class MakerResponse {
     private Long id;
     private String name;
+    private String siteUrl;
+    private List<String> makerSynonyms = new ArrayList<>();
     private List<BrandResponse> brandResponses = new ArrayList<>();
 
     public static MakerResponse from(Maker maker) {
         List<BrandResponse> brandResponses = maker.getBrands().stream()
                 .map(BrandResponse::from)
                 .collect(Collectors.toList());
-        return new MakerResponse(maker.getId(), maker.getName(), brandResponses);
+        return new MakerResponse(maker.getId(), maker.getName(), maker.siteUrl(), maker.makerSynonymNames(), brandResponses);
     }
 }

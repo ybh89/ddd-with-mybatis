@@ -1,6 +1,6 @@
 package com.demo.dddwithmybatis.v3.infrastructure.mapper;
 
-import com.demo.dddwithmybatis.v3.domain.model.Brand;
+import com.demo.dddwithmybatis.v3.domain.model.brand.Brand;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,7 +1,7 @@
 package com.demo.dddwithmybatis.v3.application;
 
-import com.demo.dddwithmybatis.v3.domain.model.Brand;
-import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.model.brand.Brand;
+import com.demo.dddwithmybatis.v3.domain.model.maker.Maker;
 import com.demo.dddwithmybatis.v3.domain.model.Series;
 import com.demo.dddwithmybatis.v3.dto.maker.MakerSaveRequest;
 import com.demo.dddwithmybatis.v3.dto.maker.MakerUpdateRequest;
@@ -26,9 +26,11 @@ public class MakerAggregateFactory {
                     List<Series> seriesList = brandRequest.getSeriesRequests().stream()
                             .map(seriesRequest -> Series.create(seriesRequest.getName()))
                             .collect(Collectors.toList());
-                    return Brand.create(brandRequest.getName(), seriesList);
+                    return Brand.create(null, brandRequest.getName(), brandRequest.getBrandSynonyms()
+                        , brandRequest.getSiteUrl(), seriesList);
                 }).collect(Collectors.toList());
-        return Maker.create(makerSaveRequest.getName(), brands);
+        return Maker.create(null, makerSaveRequest.getName(), makerSaveRequest.getMakerSynonyms()
+            , makerSaveRequest.getSiteUrl(), brands);
     }
 
     public static Maker from(MakerUpdateRequest makerUpdateRequest)
@@ -42,8 +44,10 @@ public class MakerAggregateFactory {
                     List<Series> seriesList = brandRequest.getSeriesUpdateRequests().stream()
                             .map(seriesRequest -> Series.create(seriesRequest.getId(), seriesRequest.getName()))
                             .collect(Collectors.toList());
-                    return Brand.create(brandRequest.getId(), brandRequest.getName(), seriesList);
+                    return Brand.create(brandRequest.getId(), brandRequest.getName(), brandRequest.getBrandSynonyms()
+                        , brandRequest.getSiteUrl(), seriesList);
                 }).collect(Collectors.toList());
-        return Maker.create(makerUpdateRequest.getId(), makerUpdateRequest.getName(), brands);
+        return Maker.create(makerUpdateRequest.getId(), makerUpdateRequest.getName()
+            , makerUpdateRequest.getMakerSynonyms(), makerUpdateRequest.getSiteUrl(), brands);
     }
 }

@@ -1,6 +1,6 @@
 package com.demo.dddwithmybatis.v3.application;
 
-import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.model.maker.Maker;
 import com.demo.dddwithmybatis.v3.domain.repository.MakerAggregateRepositoryV3;
 import com.demo.dddwithmybatis.v3.dto.maker.MakerResponse;
 import com.demo.dddwithmybatis.v3.dto.maker.MakerSaveRequest;

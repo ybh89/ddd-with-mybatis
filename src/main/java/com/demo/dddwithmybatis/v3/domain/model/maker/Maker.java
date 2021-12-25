@@ -1,6 +1,8 @@
-package com.demo.dddwithmybatis.v3.domain.model;
+package com.demo.dddwithmybatis.v3.domain.model.maker;
 
 import com.demo.dddwithmybatis.v3.domain.Entity;
+import com.demo.dddwithmybatis.v3.domain.model.brand.Brand;
+import com.demo.dddwithmybatis.v3.domain.model.URL;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,28 +19,25 @@ import java.util.stream.Collectors;
 public class Maker {
     private Long id;
     private String name;
+    private List<MakerSynonym> makerSynonyms;
+    private URL siteUrl;
     private List<Brand> brands;
 
-    private Maker(String name, List<Brand> brands)
+    private Maker(Long id, String name, List<Brand> brands, List<MakerSynonym> makerSynonyms, URL siteUrl)
     {
         this.name = name;
+        this.makerSynonyms = makerSynonyms;
         this.brands = brands;
-    }
-
-    private Maker(Long id, String name, List<Brand> brands)
-    {
-        this(name, brands);
         this.id = id;
+        this.siteUrl = siteUrl;
     }
 
-    public static Maker create(String name, List<Brand> brands)
+    public static Maker create(Long id, String name, List<String> makerSynonymNames, String siteUrl, List<Brand> brands)
     {
-        return new Maker(name, brands);
-    }
-
-    public static Maker create(Long id, String name, List<Brand> brands)
-    {
-        return new Maker(id, name, brands);
+        List<MakerSynonym> makerSynonyms = makerSynonymNames.stream()
+            .map(MakerSynonym::new)
+            .collect(Collectors.toList());
+        return new Maker(id, name, brands, makerSynonyms, new URL(siteUrl));
     }
 
     public void update(Maker newMaker) {
@@ -55,6 +54,18 @@ public class Maker {
 
         this.brands.addAll(newBrands);
         return newBrands;
+    }
+
+    public String siteUrl()
+    {
+        return this.siteUrl.value();
+    }
+
+    public List<String> makerSynonymNames()
+    {
+        return makerSynonyms.stream()
+            .map(MakerSynonym::value)
+            .collect(Collectors.toList());
     }
 
     @Override

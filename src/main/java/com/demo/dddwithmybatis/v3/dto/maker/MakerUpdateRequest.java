@@ -16,5 +16,7 @@ import java.util.List;
 public class MakerUpdateRequest {
     private Long id;
     private String name;
+    private String siteUrl;
+    private List<String> makerSynonyms = new ArrayList<>();
     private List<BrandUpdateRequest> brandUpdateRequests = new ArrayList<>();
 }

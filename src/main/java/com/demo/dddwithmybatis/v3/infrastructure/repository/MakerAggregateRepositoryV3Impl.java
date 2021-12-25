@@ -1,7 +1,7 @@
 package com.demo.dddwithmybatis.v3.infrastructure.repository;
 
-import com.demo.dddwithmybatis.v3.domain.model.Brand;
-import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.model.brand.Brand;
+import com.demo.dddwithmybatis.v3.domain.model.maker.Maker;
 import com.demo.dddwithmybatis.v3.domain.model.Series;
 import com.demo.dddwithmybatis.v3.domain.repository.MakerAggregateRepositoryV3;
 import com.demo.dddwithmybatis.v3.infrastructure.mapper.BrandMapperV3;

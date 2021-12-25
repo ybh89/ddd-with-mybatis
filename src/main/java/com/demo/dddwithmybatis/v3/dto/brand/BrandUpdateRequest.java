@@ -16,5 +16,7 @@ import java.util.List;
 public class BrandUpdateRequest {
     private Long id;
     private String name;
+    private String siteUrl;
+    private List<String> brandSynonyms = new ArrayList<>();
     private List<SeriesUpdateRequest> seriesUpdateRequests = new ArrayList<>();
 }

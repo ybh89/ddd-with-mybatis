@@ -1,6 +1,6 @@
 package com.demo.dddwithmybatis.v3.domain.repository;
 
-import com.demo.dddwithmybatis.v3.domain.model.Maker;
+import com.demo.dddwithmybatis.v3.domain.model.maker.Maker;
 
 import java.util.Optional;
 
