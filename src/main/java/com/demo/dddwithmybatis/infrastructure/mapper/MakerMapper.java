@@ -12,4 +12,6 @@ public interface MakerMapper
     int save(@Param("maker") Maker maker);
     int update(@Param("maker") Maker maker);
     Optional<Maker> findById(@Param("id") Long id);
+    int removeMakerSynonyms(@Param("maker") Maker maker);
+    int saveMakerSynonyms(@Param("maker") Maker maker);
 }

@@ -13,4 +13,18 @@
         WHERE id = #{brand.id}
     </update>
 
+    <delete id="removeBrandSynonyms">
+        DELETE FROM brand_synonym
+        WHERE brand_id = #{brand.id}
+    </delete>
+
+    <insert id="saveBrandSynonyms">
+        INSERT INTO brand_synonym
+            (brand_id, name)
+        VALUES
+        <foreach collection="brand.brandSynonyms" item="brandSynonym" separator=",">
+            (#{brand.id}, #{brandSynonym.name})
+        </foreach>
+    </insert>
+
 </mapper>

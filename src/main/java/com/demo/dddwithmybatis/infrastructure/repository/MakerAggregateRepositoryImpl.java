@@ -31,9 +31,11 @@ public class MakerAggregateRepositoryImpl implements MakerAggregateRepository
     public Maker save(Maker maker)
     {
         makerMapper.save(maker);
+        makerMapper.saveMakerSynonyms(maker);
         maker.getBrands().forEach(brand ->
         {
             brandMapper.save(maker.getId(), brand);
+            brandMapper.saveBrandSynonyms(brand);
             brand.getSeriesList().forEach(series -> seriesMapper.save(brand.getId(), series));
         });
         return maker;

@@ -9,4 +9,6 @@ public interface BrandMapper
 {
     int save(@Param("makerId") Long makerId, @Param("brand") Brand brand);
     int update(@Param("brand") Brand brand);
+    int removeBrandSynonyms(@Param("brand") Brand brand);
+    int saveBrandSynonyms(@Param("brand") Brand brand);
 }

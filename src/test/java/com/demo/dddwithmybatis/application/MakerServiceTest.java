@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,10 +34,12 @@ public class MakerServiceTest
         SeriesSaveRequest seriesRequest = new SeriesSaveRequest("시리즈");
         BrandSaveRequest brandSaveRequest = BrandSaveRequest.builder()
             .name("브랜드")
+            .brandSynonyms(Arrays.asList("브랜드동의어1", "브랜드동의어2"))
             .seriesRequests(Collections.singletonList(seriesRequest))
             .build();
         MakerSaveRequest makerSaveRequest = MakerSaveRequest.builder()
             .name("제조사")
+            .makerSynonyms(Arrays.asList("제조사동의어1", "제조사동의어2"))
             .brandSaveRequests(Collections.singletonList(brandSaveRequest))
             .build();
         initMakerResponse = makerService.create(makerSaveRequest);

@@ -37,6 +37,20 @@
         WHERE id = #{maker.id}
     </update>
 
+    <delete id="removeMakerSynonyms">
+        DELETE FROM maker_synonym
+        WHERE maker_id = #{maker.id}
+    </delete>
+
+    <insert id="saveMakerSynonyms">
+        INSERT INTO maker_synonym
+            (maker_id, name)
+        VALUES
+        <foreach collection="maker.makerSynonyms" item="makerSynonym" separator=",">
+            (#{maker.id}, #{makerSynonym.name})
+        </foreach>
+    </insert>
+
     <resultMap id="makerResultMap" type="com.demo.dddwithmybatis.domain.model.maker.Maker">
         <id column="maker_id" property="id"/>
         <result column="maker_name" property="name"/>
